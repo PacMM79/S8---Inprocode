@@ -1,13 +1,16 @@
 <header>
-  <div class="px-3 py-2 bg-primary">
-    <div class="m-0">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-decoration-none">
+  <nav class="navbar navbar-expand-lg bg-primary text-primary" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a href="/" class="navbar-brand">
           <img src="/assets/Inprocode_transparent.png" width="75px">
         </a>
-        <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0">
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarColor01">
+          <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a href="/home" class="nav-link active"><i class="bi bi-house-door"></i> Home</a>
+            <a href="/home" class="nav-link"><i class="bi bi-house-door"></i> Home</a>
           </li>
           <li class="nav-item">
             <a href="/map" class="nav-link"><i class="bi bi-map"></i> Mapa</a>
@@ -19,10 +22,13 @@
             <a href="/charts" class="nav-link"><i class="bi bi-graph-up"></i> Gràfics</a>
           </li>
         </ul>
-        <div class="ms-4 align-content-center">
-          <button onclick="cambiarHojaDeEstilo()" class="btn btn-secondary"><i class="bi bi-brightness-high"></i> <i class="bi bi-arrows"></i> <i class="bi bi-moon-stars"></i></button>
+        <div class="ms-4">
+          <button onclick="cambiarHojaDeEstilo()" class="btn btn-secondary">
+            <i class="bi bi-brightness-high"></i> 
+            <i class="bi bi-arrows m-2"></i>
+            <i class="bi bi-moon-stars"></i></button>
         </div>
       </div>
     </div>
-  </div>
+  </nav>
 </header>
