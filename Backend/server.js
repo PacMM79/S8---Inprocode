@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'inprocode'
+  database: 'test'
 });
 
 connection.connect(error => {
@@ -21,9 +21,17 @@ connection.connect(error => {
   console.log('Base de datos conectada!');
 });
 
-app.get('/api/datos', (req, res) => {
-  const sql = 'SELECT * FROM test';
-  connection.query(sql, (error, results) => {
+app.get('/api/datos', (_req, res) => {
+  const clients = 'SELECT * FROM clientes_2024';
+  connection.query(clients, (error, results) => {
+    if (error) throw error;
+    res.send(results);
+  });
+});
+
+app.get('/api/locations', (_req, res) => {
+  const locations = 'SELECT * FROM locations';
+  connection.query(locations, (error, results) => {
     if (error) throw error;
     res.send(results);
   });
