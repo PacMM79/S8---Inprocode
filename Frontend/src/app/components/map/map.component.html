@@ -1,19 +1,12 @@
 <div class="m-5 p-5">map works!
-<google-map
-  height="650px"
-  width="100%"
-  [center]="center"
-  [zoom]="zoom"
-  (mapClick)="addMarker($event)"
->
-  @for (marker of markers; track $index) {
-  <map-marker
-    [position]="marker.position"
-    [title]="marker.title"
-    (mapClick)="removeMarker($index)"
-  >
 
-  </map-marker>
-  }
-</google-map>
+  <google-map [height]="'650px'" [width]="'100%'" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="addMarker($event)">
+    <map-marker *ngFor="let marker of markers; let i = index"
+                [position]="{lat: marker.lat, lng: marker.lng}"
+                [title]="marker.title"
+                [options]="{ draggable: true }"
+                (mapClick)="removeMarker(i)">
+    </map-marker>
+  </google-map>
+
 </div>

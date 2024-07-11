@@ -106,3 +106,73 @@ process.on('SIGINT', () => {
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
+
+// GOOGLE MAPS //
+
+// Ruta para obtener todos los marcadores
+app.get('/api/markers', (_req, res) => {
+  const query = 'SELECT * FROM markers';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send(results);
+  });
+});
+
+// Ruta para obtener un marcador por ID
+app.get('/api/markers/:id', (req, res) => {
+  const query = 'SELECT * FROM markers WHERE id = ?';
+  connection.query(query, [req.params.id], (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send(results[0]);
+  });
+});
+
+// Ruta para añadir un nuevo marcador
+app.post('/api/markers', (req, res) => {
+  const newMarker = req.body;
+  const query = 'INSERT INTO markers (lat, lng, title, description) VALUES (?, ?, ?, ?)';
+  const values = [newMarker.lat, newMarker.lng, newMarker.title, newMarker.description];
+
+  connection.query(query, values, (error, results) => {
+    if (error) {
+      console.error('Error en la inserción de datos:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.status(201).send({ id: results.insertId, ...newMarker });
+  });
+});
+
+// Ruta para modificar un marcador existente
+app.put('/api/markers/:id', (req, res) => {
+  const updatedMarker = req.body;
+  const query = 'UPDATE markers SET lat = ?, lng = ?, title = ?, description = ? WHERE id = ?';
+  const values = [updatedMarker.lat, updatedMarker.lng, updatedMarker.title, updatedMarker.description, req.params.id];
+
+  connection.query(query, values, (error, results) => {
+    if (error) {
+      console.error('Error en la actualización de datos:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send(updatedMarker);
+  });
+});
+
+// Ruta para eliminar un marcador
+app.delete('/api/markers/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM markers WHERE id = ?';
+  connection.query(query, [id], (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send({ message: 'Marker deleted successfully' });
+  });
+});
+

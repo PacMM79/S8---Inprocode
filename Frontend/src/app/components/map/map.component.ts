@@ -1,31 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { LocationService } from '../../services/location.service';
+import { Marker } from '../../interfaces/map-markers';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-maps',
   standalone: true,
-  imports: [GoogleMapsModule],
+  imports: [GoogleMapsModule, CommonModule],
   templateUrl: './map.component.html',
-  styleUrl: './map.component.scss'
+  styleUrls: ['./map.component.scss']
 })
-export class MapComponent {
-  zoom = 13;
+export class MapComponent implements OnInit {
+  zoom = 11;
   center: google.maps.LatLngLiteral = {
-    lat: 41.390205,
-    lng: 2.154007,
+    lat: 41.390390,
+    lng: 2.154154,
   };
   options: google.maps.MapOptions = {
     gestureHandling: 'cooperative',
   };
-  markers: any[] = [];
+  markers: Marker[] = [];
 
   constructor(private locationService: LocationService) {}
 
   ngOnInit() {
     this.locationService.getLocations().subscribe({
       next: (locations) => {
-        this.markers = locations;
+        this.markers = locations.map(location => ({
+          id: location.id,
+          lat: location.lat,
+          lng: location.lng,
+          title: location.title,
+          description: location.description,
+        }));
       },
       error: (err) => {
         console.error('Error finding locations:', err);
@@ -35,14 +43,15 @@ export class MapComponent {
 
   addMarker(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) {
-      const newMarker = {
-        position: event.latLng.toJSON(),
+      const newMarker: Marker = {
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng(),
         title: 'New Marker',
-        id: null,
+        description: 'Description for new marker',
       };
       this.locationService.saveLocation(newMarker).subscribe((response) => {
         console.log('Location saved:', response);
-        newMarker.id = response._id;
+        newMarker.id = response.id;
         this.markers.push(newMarker);
       });
     }
@@ -50,7 +59,7 @@ export class MapComponent {
 
   removeMarker(markerIndex: number) {
     const marker = this.markers[markerIndex];
-    if (marker.id || marker._id) {
+    if (marker.id) {
       this.locationService.deleteLocation(marker).subscribe({
         next: () => {
           console.log('Location deleted');

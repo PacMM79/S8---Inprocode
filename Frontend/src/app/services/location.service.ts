@@ -1,25 +1,25 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Marker } from '../interfaces/map-markers';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LocationService {
-  private apiUrl = 'http://localhost:3000/api/locations';
+  private apiUrl = 'http://localhost:3000/api/markers';
 
   constructor(private http: HttpClient) {}
 
-  saveLocation(location: any): Observable<any> {
-    return this.http.post(this.apiUrl, location);
+  getLocations(): Observable<Marker[]> {
+    return this.http.get<Marker[]>(this.apiUrl);
   }
 
-  deleteLocation(location: any): Observable<any> {
-    const deleteUrl = `${this.apiUrl}/${location.id || location._id}`;
-    return this.http.delete(deleteUrl);
+  saveLocation(location: Marker): Observable<Marker> {
+    return this.http.post<Marker>(this.apiUrl, location);
   }
 
-  getLocations(): Observable<any> {
-    return this.http.get<any[]>(this.apiUrl);
+  deleteLocation(location: Marker): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${location.id}`);
   }
 }
