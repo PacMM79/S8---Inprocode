@@ -32,7 +32,7 @@
             <ng-container *ngIf="dato.notes">
               <!-- Button trigger modal -->
               <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" [attr.data-bs-target]="'#modalNotas' + dato.id">
-                <i class="bi bi-eye"> Ver notas</i>
+                <i class="bi bi-eye"> Ver notas</i> 
               </button>
 
               <!-- Modal -->
@@ -40,7 +40,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Notas de reserva</h1>
+                      <h1 class="modal-title fs-5" id="exampleModalLabel"><i class="bi bi-stickies"></i> Notas de reserva</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

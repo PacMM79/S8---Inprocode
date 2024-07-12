@@ -3,7 +3,7 @@
 
   <div class="alert alert-dismissible alert-info">
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    <strong>Instrucciones:</strong> Haz click sobre cualquier punto del mapa para guardar una ubicación, vuelve a hacer click encima de ella para eliminarla.
+    <i class="bi bi-info-circle"></i><strong> Instrucciones:</strong> Haz click sobre cualquier punto del mapa para guardar una ubicación. Para eliminarla, vuelve a hacer click encima de ella.
   </div>
 
   <google-map [height]="'600px'" [width]="'100%'" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="addMarker($event)">
