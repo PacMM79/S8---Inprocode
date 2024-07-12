@@ -1,6 +1,8 @@
-
  li {
   font-size: large;
   font-weight: 600;
  }
  
+.nav-link.active {
+    color: var(--bs-nav-link-hover-color);
+  }
