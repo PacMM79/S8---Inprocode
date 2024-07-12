@@ -1,12 +1,12 @@
 <form [formGroup]="form" (ngSubmit)="saveBooking()">
   <div class="card text-white bg-primary mb-3 mt-5 col-8 offset-2 col-xl-4 offset-xl-4">
     <div class="card-header text-center">
-      <h3 *ngIf="bookingId">Modificar Reserva</h3>
-      <h3 *ngIf="!bookingId">Añadir Reserva</h3>
+      <h4 *ngIf="bookingId" class="mt-2"><b>MODIFICAR RESERVA</b></h4>
+      <h4 *ngIf="!bookingId" class="mt-2"><b>AÑADIR RESERVA</b></h4>
     </div>
     <div class="card-body align-content-center mx-4">
       <div>
-        <label for="name" class="form-label">Nombre</label>
+        <label for="name" class="form-label ms-1"><i class="bi bi-person"></i> Nombre</label>
         <input formControlName="name" type="text" class="form-control" id="name" placeholder="Introduce el nombre">
         <span *ngIf="form.get('name')?.hasError('required') && form.get('name')?.touched">
           <b class="ms-3 text-danger">Campo requerido</b>
@@ -14,7 +14,7 @@
       </div>
 
       <div>
-        <label for="email" class="form-label mt-3">Email</label>
+        <label for="email" class="form-label mt-2 ms-1"><i class="bi bi-envelope-at"></i> Email</label>
         <input formControlName="email" type="email" class="form-control" id="email" placeholder="Introduce el Email">
         <span *ngIf="form.get('email')?.hasError('required') && form.get('email')?.touched">
           <b class="ms-3 text-danger">Campo requerido</b>
@@ -22,7 +22,7 @@
       </div>
 
       <div>
-        <label for="tel" class="form-label mt-3">Teléfono</label>
+        <label for="tel" class="form-label mt-2 ms-1"><i class="bi bi-telephone"></i> Teléfono</label>
         <input formControlName="tel" type="text" class="form-control" id="tel" placeholder="Introduce el teléfono">
         <span *ngIf="form.get('tel')?.hasError('required') && form.get('tel')?.touched">
           <b class="ms-3 text-danger">Campo requerido</b>
@@ -30,7 +30,7 @@
       </div>
 
       <div>
-        <label for="date" class="form-label mt-3">Fecha de reserva</label>
+        <label for="date" class="form-label mt-2 ms-1"><i class="bi bi-calendar-date"></i> Fecha de la reserva</label>
         <input formControlName="date" type="date" class="form-control" id="date" placeholder="Introduce la fecha">
         <span *ngIf="form.get('date')?.hasError('required') && form.get('date')?.touched">
           <b class="ms-3 text-danger">Campo requerido</b>
@@ -38,7 +38,7 @@
       </div>
 
       <div>
-        <label for="time" class="form-label mt-3">Hora de reserva</label>
+        <label for="time" class="form-label mt-2 ms-1"><i class="bi bi-alarm"></i> Hora de la reserva</label>
         <input formControlName="time" type="time" class="form-control" id="time" placeholder="Introduce la hora">
         <span *ngIf="form.get('time')?.hasError('required') && form.get('time')?.touched">
           <b class="ms-3 text-danger">Campo requerido</b>
@@ -46,7 +46,7 @@
       </div>
 
       <div>
-        <label for="service" class="form-label mt-3">Servicio</label>
+        <label for="service" class="form-label mt-2 ms-1"><i class="bi bi-building-fill-gear"></i> Seleciona un servicio</label>
         <select formControlName="service" type="text" class="form-control form-select" id="service" placeholder="Introduce el servicio">
           <option>Servicio 1</option>
           <option>Servicio 2</option>
@@ -60,14 +60,14 @@
       </div>
 
       <div>
-        <label for="notes" class="form-label mt-3">Notas</label>
+        <label for="notes" class="form-label mt-2 ms-1"><i class="bi bi-stickies"></i> Notas</label>
         <textarea formControlName="notes" type="text-area" class="form-control" id="notes" placeholder="Introduce notas adicionales de la reserva"></textarea>
       </div>
       
-      <div class="mt-4 text-center">
-        <button [disabled]="form.invalid" type="submit" class="btn btn-success m-2">Guardar</button>
-        <button routerLink="/" type="button" class="btn btn-secondary m-2">Volver</button>
-        <button *ngIf="bookingId" (click)="deleteBooking()" type="button" class="btn btn-danger m-2">Eliminar</button>
+      <div class="mt-4 d-flex justify-content-between">
+        <button [disabled]="form.invalid" type="submit" class="btn btn-success m-0"><i class="bi bi-check-lg"></i> Guardar</button>
+        <button routerLink="/" type="button" class="btn btn-secondary m-0"><i class="bi bi-arrow-left"></i> Volver</button>
+        <button *ngIf="bookingId" (click)="deleteBooking()" type="button" class="btn btn-danger m-0"><i class="bi bi-trash"></i> Eliminar</button>
       </div>
     </div>
   </div>

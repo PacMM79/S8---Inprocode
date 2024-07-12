@@ -1,62 +1,65 @@
 <div class="m-3 p-3">
   <h1>Reservas</h1>
-  <div class="d-flex justify-content-end m-3">
-    <button type="button" class="btn btn-primary btn-lg" routerLink="/add">Añadir reserva</button>
+  <div class="d-flex justify-content-end mb-5">
+    <button type="button" class="btn btn-primary btn-lg" routerLink="/add"><i class="bi bi-journal-plus"></i> Añadir reserva</button>
   </div>
-  <table class="table table-hover">
-    <thead>
-      <tr class="table-primary">
-        <th scope="col">Nombre</th>
-        <th scope="col">Email</th>
-        <th scope="col">Teléfono</th>
-        <th scope="col">Fecha</th>
-        <th scope="col">Hora</th>
-        <th scope="col">Servicio</th>
-        <th scope="col">Precio</th>
-        <th scope="col">Notas</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let dato of bookings" class="table-Default">
-        <th scope="row">{{ dato.name }}</th>
-        <td>{{ dato.email }}</td>
-        <td>{{ dato.tel }}</td>
-        <td>{{ dato.formattedDate }}</td>
-        <td>{{ dato.formattedTime }}h.</td>
-        <td>{{ dato.service }}</td>
-        <td>{{ dato.price }} €</td>
-        <td>
-          <!-- Mostrar botón y modal solo si hay notas -->
-          <ng-container *ngIf="dato.notes">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" [attr.data-bs-target]="'#modalNotas' + dato.id">
-              Ver notas
-            </button>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr class="table-primary">
+          <th scope="col">Id</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Email</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Hora</th>
+          <th scope="col">Servicio</th>
+          <th scope="col">Notas</th>
+          <th scope="col" class="text-center"><i class="bi bi-pencil"></i></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dato of bookings" class="table-Default">
+          <td>{{ dato.id }}</td>
+          <th scope="row" class="text-truncate">{{ dato.name }}</th>
+          <td class="text-truncate">{{ dato.email }}</td>
+          <td class="text-truncate">{{ dato.tel }}</td>
+          <td>{{ dato.formattedDate }}</td>
+          <td>{{ dato.formattedTime }}h.</td>
+          <td>{{ dato.service }}</td>
+          <td>
+            <!-- Mostrar botón y modal solo si hay notas -->
+            <ng-container *ngIf="dato.notes">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" [attr.data-bs-target]="'#modalNotas' + dato.id">
+                <i class="bi bi-eye"> Ver notas</i>
+              </button>
 
-            <!-- Modal -->
-            <div class="modal fade" [attr.id]="'modalNotas' + dato.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Notas de reserva</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    {{ dato.notes }}
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <!-- Modal -->
+              <div class="modal fade" [attr.id]="'modalNotas' + dato.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Notas de reserva</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      {{ dato.notes }}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </ng-container>
-        </td>
-        <td class="text-center">
-          <button routerLink="/edit/{{dato.id}}" type="button" class="btn btn-sm btn-outline-warning m-1">Modificar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            </ng-container>
+          </td>
+          <td class="text-center">
+            <button routerLink="/edit/{{dato.id}}" type="button" class="btn btn-sm btn-outline-warning m-1">Modificar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button type="button" class="btn btn-secondary ms-2" (click)="downloadCSV()"><i class="bi bi-download"></i> Descargar CSV</button>
 </div>

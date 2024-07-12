@@ -13,10 +13,7 @@ import { of } from 'rxjs';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-deleteBooking() {
-throw new Error('Method not implemented.');
-}
-  bookings: any[] = [];
+bookings: any[] = [];
 bookingId: any;
 
   constructor(@Inject(BookingsService) private dataService: BookingsService) { }
@@ -55,4 +52,36 @@ bookingId: any;
     const [hours, minutes] = hora.split(':');
     return `${hours}:${minutes}`;
   }
+
+  convertToCSV(data: any[]) {
+    const headers = ['Nombre', 'Email', 'Teléfono', 'Fecha', 'Hora', 'Servicio', 'Precio', 'Notas'];
+    const csvRows = [headers.join(',')];
+  
+    for (const booking of data) {
+      const row = [
+        booking.name,
+        booking.email,
+        booking.tel,
+        booking.formattedDate,
+        booking.formattedTime,
+        booking.service,
+        booking.price,
+        booking.notes || '' // Agregar una cadena vacía si no hay notas
+      ].join(',');
+      csvRows.push(row);
+    }
+  
+    return csvRows.join('\n');
+  }
+
+  downloadCSV() {
+    const csvData = this.convertToCSV(this.bookings);
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'reservas.csv');
+    a.click();
+  }
+
 }
