@@ -65,9 +65,9 @@
       </div>
       
       <div class="mt-4 d-flex justify-content-between">
-        <button [disabled]="form.invalid" type="submit" class="btn btn-success m-0"><i class="bi bi-check-lg"></i> Guardar</button>
         <button routerLink="/" type="button" class="btn btn-secondary m-0"><i class="bi bi-arrow-left"></i> Volver</button>
-        <button *ngIf="bookingId" (click)="deleteBooking()" type="button" class="btn btn-danger m-0"><i class="bi bi-trash"></i> Eliminar</button>
+        <button *ngIf="bookingId" (click)="deleteBooking()" type="button" class="btn btn-outline-danger m-0"><i class="bi bi-trash"></i> Eliminar</button>
+        <button [disabled]="form.invalid" type="submit" class="btn btn-success m-0"><i class="bi bi-check-lg"></i> Guardar</button>
       </div>
     </div>
   </div>
