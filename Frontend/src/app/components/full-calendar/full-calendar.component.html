@@ -28,7 +28,8 @@
   <!-- Modal Añadir/Editar Evento -->
   <ng-template #eventModal let-modal>
     <div class="modal-header">
-      <h5 class="modal-title">Añadir/Modificar Evento</h5>
+      <h5 *ngIf="eventForm.get('id')?.value" class="modal-title">Modificar Evento</h5>
+      <h5 *ngIf="!eventForm.get('id')?.value" class="modal-title">Añadir Evento</h5>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
@@ -61,7 +62,7 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button *ngIf="eventForm.get('id')?.value" type="button" class="btn btn-outline-danger me-5" (click)="confirmDelete(eventForm.get('id')?.value)">Eliminar Evento</button>
+      <button *ngIf="eventForm.get('id')?.value" type="button" class="btn btn-outline-danger position-absolute top-75 start-0 ms-2" (click)="confirmDelete(eventForm.get('id')?.value)">Eliminar Evento</button>
       <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
       <button type="button" class="btn btn-primary" (click)="saveEvent()">Guardar</button>
     </div>
