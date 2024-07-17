@@ -23,5 +23,4 @@ function aplicarTemaGuardado() {
   }
 }
 
-// Llama a esta función al cargar la página
 aplicarTemaGuardado();

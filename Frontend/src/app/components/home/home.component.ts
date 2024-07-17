@@ -10,7 +10,7 @@ import { of } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
 bookings: any[] = [];

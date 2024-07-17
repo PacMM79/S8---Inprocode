@@ -17,7 +17,7 @@ import { formatDate } from '@angular/common';
   standalone: true,
   imports: [FullCalendarModule, CommonModule, ReactiveFormsModule],
   templateUrl: './full-calendar.component.html',
-  styleUrls: ['./full-calendar.component.scss'],
+  styleUrl: './full-calendar.component.scss',
 })
 export class CalendarComponent implements AfterViewInit {
   @ViewChild('fullcalendar') fullcalendar!: FullCalendarComponent;

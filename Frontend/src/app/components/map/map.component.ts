@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [GoogleMapsModule, CommonModule],
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrl: './map.component.scss'
 })
 export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild(GoogleMap) map!: GoogleMap;
