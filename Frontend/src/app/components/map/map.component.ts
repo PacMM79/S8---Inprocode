@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { GoogleMapsModule, GoogleMap } from '@angular/google-maps';
-import { LocationService } from '../../services/location.service';
+import { LocationService } from '../../services/map-locations.service';
 import { Marker } from '../../interfaces/map-markers';
 import { CommonModule } from '@angular/common';
 

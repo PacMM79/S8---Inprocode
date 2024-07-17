@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookingsService } from '../../services/bookings.service';
-import { Booking } from '../../interfaces/booking';
+import { Booking } from '../../interfaces/bookings';
 import { CommonModule } from '@angular/common';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';

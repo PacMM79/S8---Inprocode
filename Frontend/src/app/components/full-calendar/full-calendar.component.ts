@@ -4,7 +4,7 @@ import { CalendarOptions, DateSelectArg, EventApi, EventInput } from '@fullcalen
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { EventService } from '../../services/event.service';
+import { EventService } from '../../services/calendar-events.service';
 import { createEventId } from './event-utils';
 import { CommonModule } from '@angular/common';
 import esLocale from '@fullcalendar/core/locales/es';

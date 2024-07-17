@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingsService } from '../../services/bookings.service';
-import { EventService } from '../../services/event.service';
+import { EventService } from '../../services/calendar-events.service';
 import Chart from 'chart.js/auto';
 
 @Component({
