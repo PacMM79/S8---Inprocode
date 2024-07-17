@@ -15,10 +15,12 @@ import { of } from 'rxjs';
 export class HomeComponent implements OnInit {
 bookings: any[] = [];
 bookingId: any;
+sortedByDateAsc: boolean = false;
 
   constructor(@Inject(BookingsService) private dataService: BookingsService) { }
 
   ngOnInit() {
+    this.fetchBookings();
     this.dataService.getDatos().pipe(
       catchError(error => {
         console.error('Error fetching bookings:', error);
@@ -31,6 +33,35 @@ bookingId: any;
         formattedTime: this.formatHora(dato.time)
       }));
     });
+  }
+
+  fetchBookings() {
+    this.dataService.getDatos().pipe(
+      catchError(error => {
+        console.error('Error fetching bookings:', error);
+        return of([]);
+      })
+    ).subscribe(data => {
+      this.bookings = data.map(dato => ({
+        ...dato,
+        formattedDate: this.formatFecha(dato.date),
+        formattedTime: this.formatHora(dato.time),
+      }));
+      this.sortBookingsByDate();
+    });
+  }
+
+  sortBookingsByDate() {
+    if (this.sortedByDateAsc) {
+      this.bookings.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    } else {
+      this.bookings.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+  }
+
+  toggleSortByDate() {
+    this.sortedByDateAsc = !this.sortedByDateAsc;
+    this.sortBookingsByDate();
   }
 
   formatFecha(fecha: string): string {

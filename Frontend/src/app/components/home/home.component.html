@@ -11,7 +11,11 @@
           <th scope="col">Nombre</th>
           <th scope="col">Email</th>
           <th scope="col">Teléfono</th>
-          <th scope="col">Fecha</th>
+          <th scope="col" (click)="toggleSortByDate()">Fecha
+              <i *ngIf="sortedByDateAsc" class="bi bi-caret-up-fill"></i>
+              <i *ngIf="!sortedByDateAsc" class="bi bi-caret-down-fill"></i>
+            
+          </th>
           <th scope="col">Hora</th>
           <th scope="col">Servicio</th>
           <th scope="col">Notas</th>
