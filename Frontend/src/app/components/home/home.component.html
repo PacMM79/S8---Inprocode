@@ -4,7 +4,7 @@
     <button type="button" class="btn btn-primary btn-lg" routerLink="/add"><i class="bi bi-journal-plus"></i> Añadir reserva</button>
   </div>
   <div class="table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover table-striped">
       <thead>
         <tr class="table-primary">
           <th scope="col">Id</th>
@@ -12,9 +12,8 @@
           <th scope="col">Email</th>
           <th scope="col">Teléfono</th>
           <th scope="col" (click)="toggleSortByDate()">Fecha
-              <i *ngIf="sortedByDateAsc" class="bi bi-caret-up-fill"></i>
-              <i *ngIf="!sortedByDateAsc" class="bi bi-caret-down-fill"></i>
-            
+            <i *ngIf="sortedByDateAsc" class="bi bi-caret-down-fill"></i>
+            <i *ngIf="!sortedByDateAsc" class="bi bi-caret-up-fill"></i>
           </th>
           <th scope="col">Hora</th>
           <th scope="col">Servicio</th>
@@ -23,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let dato of bookings" class="table-Default">
+        <tr *ngFor="let dato of bookings" class="align-middle">
           <td>{{ dato.id }}</td>
           <th scope="row" class="text-truncate">{{ dato.name }}</th>
           <td class="text-truncate">{{ dato.email }}</td>
@@ -35,12 +34,14 @@
             <!-- Mostrar botón y modal solo si hay notas -->
             <ng-container *ngIf="dato.notes">
               <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" [attr.data-bs-target]="'#modalNotas' + dato.id">
-                <i class="bi bi-eye"> Ver notas</i> 
+              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                [attr.data-bs-target]="'#modalNotas' + dato.id">
+                <i class="bi bi-eye"> Ver notas</i>
               </button>
 
               <!-- Modal -->
-              <div class="modal fade" [attr.id]="'modalNotas' + dato.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal fade" [attr.id]="'modalNotas' + dato.id" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -59,11 +60,13 @@
             </ng-container>
           </td>
           <td class="text-center">
-            <button routerLink="/edit/{{dato.id}}" type="button" class="btn btn-sm btn-outline-warning m-1">Modificar</button>
+            <button routerLink="/edit/{{dato.id}}" type="button"
+              class="btn btn-sm btn-outline-warning m-1">Modificar</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <button type="button" class="btn btn-secondary ms-2" (click)="downloadCSV()"><i class="bi bi-download"></i> Descargar CSV</button>
+  <button type="button" class="btn btn-secondary ms-2 mt-4" (click)="downloadCSV()">
+    <i class="bi bi-download"></i> Descargar CSV</button>
 </div>

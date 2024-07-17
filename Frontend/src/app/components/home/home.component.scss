@@ -1,7 +1,8 @@
-.bi-caret-down-fill {
+.bi-caret-down-fill, .bi-caret-up-fill {
   vertical-align: text-top;
+  cursor: pointer;
 }
 
-.table-Default {
+.bi-eye::before {
   vertical-align: middle;
 }
