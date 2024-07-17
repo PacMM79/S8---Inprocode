@@ -4,4 +4,6 @@ export interface Marker {
   lng: number;
   title: string;
   description: string;
+  category: string;
+  icon?: string;
 }

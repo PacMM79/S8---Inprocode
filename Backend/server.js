@@ -136,8 +136,8 @@ app.get('/api/markers/:id', (req, res) => {
 // Ruta para añadir un nuevo marcador
 app.post('/api/markers', (req, res) => {
   const newMarker = req.body;
-  const query = 'INSERT INTO markers (lat, lng, title, description) VALUES (?, ?, ?, ?)';
-  const values = [newMarker.lat, newMarker.lng, newMarker.title, newMarker.description];
+  const query = 'INSERT INTO markers (lat, lng, title, description, category) VALUES (?, ?, ?, ?, ?)';
+  const values = [newMarker.lat, newMarker.lng, newMarker.title, newMarker.description, newMarker.category];
 
   connection.query(query, values, (error, results) => {
     if (error) {
@@ -151,8 +151,8 @@ app.post('/api/markers', (req, res) => {
 // Ruta para modificar un marcador existente
 app.put('/api/markers/:id', (req, res) => {
   const updatedMarker = req.body;
-  const query = 'UPDATE markers SET lat = ?, lng = ?, title = ?, description = ? WHERE id = ?';
-  const values = [updatedMarker.lat, updatedMarker.lng, updatedMarker.title, updatedMarker.description, req.params.id];
+  const query = 'UPDATE markers SET lat = ?, lng = ?, title = ?, description = ?, category = ? WHERE id = ?';
+  const values = [updatedMarker.lat, updatedMarker.lng, updatedMarker.title, updatedMarker.description, updatedMarker.category, req.params.id];
 
   connection.query(query, values, (error, results) => {
     if (error) {
