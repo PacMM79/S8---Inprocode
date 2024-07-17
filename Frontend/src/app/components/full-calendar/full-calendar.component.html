@@ -62,7 +62,7 @@
       </form>
     </div>
     <div class="modal-footer">
-      <button *ngIf="eventForm.get('id')?.value" type="button" class="btn btn-outline-danger position-absolute top-75 start-0 ms-2" (click)="confirmDelete(eventForm.get('id')?.value)">Eliminar Evento</button>
+      <button *ngIf="eventForm.get('id')?.value" type="button" class="btn btn-outline-danger position-absolute top-75 start-0 ms-3" (click)="confirmDelete(eventForm.get('id')?.value)">Eliminar Evento</button>
       <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
       <button type="button" class="btn btn-primary" (click)="saveEvent()">Guardar</button>
     </div>

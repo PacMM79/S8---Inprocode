@@ -56,7 +56,7 @@ export class CalendarComponent implements AfterViewInit {
     this.eventForm = this.fb.group({
       id: [''],
       title: ['', Validators.required],
-      color: ['#000000'],
+      color: ['#FF0000'],
       start: ['', Validators.required],
       end: ['', Validators.required]
     });
@@ -94,7 +94,7 @@ export class CalendarComponent implements AfterViewInit {
     this.eventForm.patchValue({
       id: clickInfo.event.id,
       title: clickInfo.event.title,
-      color: clickInfo.event.backgroundColor || '#000000',
+      color: clickInfo.event.backgroundColor || '#FF0000',
       start: this.formatDateForInput(clickInfo.event.startStr),
       end: this.formatDateForInput(clickInfo.event.endStr)
     });
@@ -115,7 +115,7 @@ export class CalendarComponent implements AfterViewInit {
     }
 
     const newEvent: EventInput = this.eventForm.value;
-    newEvent.color = newEvent.color || '#000000';
+    newEvent.color = newEvent.color || '#FF0000';
 
     if (newEvent.id) {
       this.eventService.updateEvent(newEvent.id!, newEvent).subscribe({
