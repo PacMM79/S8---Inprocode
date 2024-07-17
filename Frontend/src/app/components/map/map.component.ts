@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { GoogleMapsModule, GoogleMap } from '@angular/google-maps';
 import { LocationService } from '../../services/location.service';
 import { Marker } from '../../interfaces/map-markers';
 import { CommonModule } from '@angular/common';
@@ -9,18 +9,25 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [GoogleMapsModule, CommonModule],
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrl: './map.component.scss'
 })
-export class MapComponent implements OnInit {
-  zoom = 12;
+export class MapComponent implements OnInit, AfterViewInit {
+  @ViewChild(GoogleMap) map!: GoogleMap;
+  zoom = 14;
   center: google.maps.LatLngLiteral = {
-    lat: 41.390390,
-    lng: 2.154154,
+    lat: 41.403275452591224,
+    lng: 2.179069984436053,
   };
   options: google.maps.MapOptions = {
     gestureHandling: 'cooperative',
   };
   markers: Marker[] = [];
+  polylineOptions: google.maps.PolylineOptions = {
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2,
+  };
+  polyline: google.maps.Polyline | null = null;
 
   constructor(private locationService: LocationService) {}
 
@@ -34,6 +41,7 @@ export class MapComponent implements OnInit {
           title: location.title,
           description: location.description,
         }));
+        this.updatePolyline();
       },
       error: (err) => {
         console.error('Error finding locations:', err);
@@ -41,18 +49,31 @@ export class MapComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.initPolyline();
+  }
+
+  initPolyline() {
+    if (this.map?.googleMap) {
+      this.polyline = new google.maps.Polyline(this.polylineOptions);
+      this.polyline.setMap(this.map.googleMap);
+      this.updatePolyline();
+    }
+  }
+
   addMarker(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) {
       const newMarker: Marker = {
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),
-        title: 'New Marker',
-        description: 'Description for new marker',
+        title: 'Marcador',
+        description: 'Punto de interés',
       };
       this.locationService.saveLocation(newMarker).subscribe((response) => {
         console.log('Location saved:', response);
         newMarker.id = response.id;
         this.markers.push(newMarker);
+        this.updatePolyline();
       });
     }
   }
@@ -64,6 +85,7 @@ export class MapComponent implements OnInit {
         next: () => {
           console.log('Location deleted');
           this.markers.splice(markerIndex, 1);
+          this.updatePolyline();
         },
         error: (err) => {
           console.error('Error deleting location:', err);
@@ -74,6 +96,15 @@ export class MapComponent implements OnInit {
         'Marker does not have an ID and cannot be deleted from the backend'
       );
       this.markers.splice(markerIndex, 1);
+      this.updatePolyline();
+    }
+  }
+
+  updatePolyline() {
+    if (this.polyline && this.map?.googleMap) {
+      const path = this.markers.map(marker => ({ lat: marker.lat, lng: marker.lng }));
+      this.polyline.setOptions({ path: path });
+      this.polyline.setMap(this.map.googleMap);
     }
   }
 }

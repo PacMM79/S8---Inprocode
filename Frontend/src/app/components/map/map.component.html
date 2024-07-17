@@ -6,13 +6,22 @@
     <i class="bi bi-info-circle"></i><strong> Instrucciones:</strong> Haz click sobre cualquier punto del mapa para guardar una ubicación. Para eliminarla, vuelve a hacer click encima de ella.
   </div>
 
-  <google-map [height]="'600px'" [width]="'100%'" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="addMarker($event)">
-    <map-marker *ngFor="let marker of markers; let i = index"
-                [position]="{lat: marker.lat, lng: marker.lng}"
-                [title]="marker.title"
-                [options]="{ draggable: true }"
-                (mapClick)="removeMarker(i)">
-    </map-marker>
-  </google-map>
+  <div class="map-container">
+    <google-map
+      #map 
+      [height]="'630px'"
+      [width]="'100%'"
+      [center]="center" 
+      [zoom]="zoom" 
+      [options]="{ draggable: true }"
+      (mapClick)="addMarker($event)">
+      <map-marker 
+        *ngFor="let marker of markers; let i = index"
+        [position]="{lat: marker.lat, lng: marker.lng}" 
+        [title]="marker.title"
+        (mapClick)="removeMarker(i)">
+      </map-marker>
+    </google-map>
+  </div>
 
 </div>
