@@ -11,8 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, HomeComponent, GoogleMapsModule, AddEditBookingComponent, ReactiveFormsModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
   title = 'Inprocode';

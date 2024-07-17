@@ -11,8 +11,7 @@ import { of } from 'rxjs';
   selector: 'app-add-edit-booking',
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule, CommonModule],
-  templateUrl: './add-edit-booking.component.html',
-  styleUrls: ['./add-edit-booking.component.scss']
+  templateUrl: './add-edit-booking.component.html'
 })
 export class AddEditBookingComponent implements OnInit {
   form: FormGroup;

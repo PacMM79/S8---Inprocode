@@ -5,8 +5,7 @@ import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-charts',
-  templateUrl: './charts.component.html',
-  styleUrl: './charts.component.scss'
+  templateUrl: './charts.component.html'
 })
 export class ChartsComponent implements OnInit {
   chart: any = [];
