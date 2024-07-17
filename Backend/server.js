@@ -13,27 +13,93 @@ const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'test'
+  database: 'inprocode'
 });
 
 connection.connect(error => {
-  if (error) throw error;
+  if (error) {
+    console.error('Error al conectar a la base de datos:', error);
+    process.exit(1); // Salir del proceso si hay un error de conexión
+  }
   console.log('Base de datos conectada!');
 });
 
-app.get('/api/datos', (_req, res) => {
-  const clients = 'SELECT * FROM clientes_2024';
-  connection.query(clients, (error, results) => {
-    if (error) throw error;
+// Ruta para obtener todas las reservas
+app.get('/api/bookings', (_req, res) => {
+  const query = 'SELECT * FROM bookings';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
     res.send(results);
   });
 });
 
-app.get('/api/locations', (_req, res) => {
-  const locations = 'SELECT * FROM locations';
-  connection.query(locations, (error, results) => {
-    if (error) throw error;
-    res.send(results);
+// Ruta para obtener una reserva por ID
+app.get('/api/bookings/:id', (req, res) => {
+  const query = 'SELECT * FROM bookings WHERE id = ?';
+  connection.query(query, [req.params.id], (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send(results[0]);
+  });
+});
+
+// Ruta para añadir una nueva reserva
+app.post('/api/bookings', (req, res) => {
+  const newBooking = req.body;
+  const query = 'INSERT INTO bookings (name, email, tel, date, time, service, notes) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const values = [newBooking.name, newBooking.email, newBooking.tel, newBooking.date, newBooking.time, newBooking.service, newBooking.notes];
+  
+  connection.query(query, values, (error, results) => {
+    if (error) {
+      console.error('Error en la inserción de datos:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.status(201).send({ id: results.insertId, ...newBooking });
+  });
+});
+
+// Ruta para modificar una reserva existente
+app.put('/api/bookings/:id', (req, res) => {
+  const updatedBooking = req.body;
+  const query = 'UPDATE bookings SET name = ?, email = ?, tel = ?, date = ?, time = ?, service = ?, notes = ? WHERE id = ?';
+  const values = [updatedBooking.name, updatedBooking.email, updatedBooking.tel, updatedBooking.date, updatedBooking.time, updatedBooking.service, updatedBooking.notes, req.params.id];
+  
+  connection.query(query, values, (error, results) => {
+    if (error) {
+      console.error('Error en la actualización de datos:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send(updatedBooking);
+  });
+});
+
+// Ruta para eliminar una reserva
+app.delete('/api/bookings/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM bookings WHERE id = ?';
+  connection.query(query, [id], (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send({ message: 'Booking deleted successfully' });
+  });
+});
+
+// Cerrar la conexión a la base de datos cuando el servidor se cierra
+process.on('SIGINT', () => {
+  connection.end(err => {
+    if (err) {
+      console.error('Error al cerrar la conexión a la base de datos:', err);
+    } else {
+      console.log('Conexión a la base de datos cerrada.');
+    }
+    process.exit(0);
   });
 });
 
