@@ -1,15 +1,84 @@
 <div class="m-3 p-3">
   <h1>Calendario</h1>
-<div class="calendar-container col-10 offset-1">
- 
-  <div class="calendar-controls d-flex justify-content-between mb-3">
-    <button class="btn btn-secondary" (click)="handleWeekendsToggle()">
-      {{ calendarOptions().weekends ? 'Ocultar Fines de Semana' : 'Mostrar Fines de Semana' }}
-    </button>
- 
+  <div class="calendar-container col-10 offset-1">
+    <div class="calendar-controls d-flex justify-content-between mb-3">
+      <!-- Botón para añadir evento -->
+      <button type="button" class="btn btn-primary" (click)="open(eventModal)">
+        Añadir Evento
+      </button>
+    </div>
+
+    <div *ngIf="calendarVisible" class="calendar-content">
+      <full-calendar #fullcalendar [options]="calendarOptions"></full-calendar>
+    </div>
+
+    <div class="mt-4">
+      <h4>Listado de eventos ({{currentEvents.length}})</h4>
+      <ul>
+        <li *ngFor="let event of currentEvents">
+          <i>Título: </i> <b>{{event.title}}</b> |
+          <i>Inicio: </i>{{ event.start | date: 'dd/MM/yyyy, HH:mm' }}h. |
+          <i>Final: </i>{{ event.end | date: 'dd/MM/yyyy, HH:mm' }}h.
+          <button type="button" class="btn badge rounded-pill text-bg-danger" (click)="deleteEventFromList(event.id)">Eliminar</button>
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <div *ngIf="calendarVisible()" class="calendar-content">
-    <full-calendar [options]="calendarOptions()"></full-calendar>
-  </div>
+  <!-- Modal Añadir/Editar Evento -->
+  <ng-template #eventModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Añadir/Modificar Evento</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="eventForm">
+        <div class="form-group">
+          <label for="eventTitle">Título</label>
+          <input type="text" class="form-control" formControlName="title" id="eventTitle" required>
+          <div *ngIf="eventForm.get('title')?.invalid && eventForm.get('title')?.touched" class="text-danger">
+            El título es obligatorio.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="eventColor">Color</label>
+          <input type="color" class="form-control" formControlName="color" id="eventColor">
+        </div>
+        <div class="form-group">
+          <label for="eventStart">Fecha y Hora de Inicio</label>
+          <input type="datetime-local" class="form-control" formControlName="start" id="eventStart" required>
+          <div *ngIf="eventForm.get('start')?.invalid && eventForm.get('start')?.touched" class="text-danger">
+            La fecha de inicio es obligatoria.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="eventEnd">Fecha y Hora de Finalización</label>
+          <input type="datetime-local" class="form-control" formControlName="end" id="eventEnd" required>
+          <div *ngIf="eventForm.get('end')?.invalid && eventForm.get('end')?.touched" class="text-danger">
+            La fecha de finalización es obligatoria.
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button *ngIf="eventForm.get('id')?.value" type="button" class="btn btn-outline-danger me-5" (click)="confirmDelete(eventForm.get('id')?.value)">Eliminar Evento</button>
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
+      <button type="button" class="btn btn-primary" (click)="saveEvent()">Guardar</button>
+    </div>
+  </ng-template>
+
+  <!-- Modal de Confirmación de Eliminación -->
+  <ng-template #confirmDeleteModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Confirmar Eliminación</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <p>¿Estás seguro de que deseas eliminar este evento?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
+      <button type="button" class="btn btn-danger" (click)="deleteEvent()">Eliminar</button>
+    </div>
+  </ng-template>
 </div>

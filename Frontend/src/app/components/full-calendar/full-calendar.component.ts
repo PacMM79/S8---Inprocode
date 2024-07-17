@@ -1,24 +1,31 @@
-import { Component, signal, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
-import interactionPlugin from '@fullcalendar/interaction';
+import { Component, ViewChild, AfterViewInit, TemplateRef } from '@angular/core';
+import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarOptions, DateSelectArg, EventApi, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { EventService } from '../../services/event.service';
+import { createEventId } from './event-utils';
+import { CommonModule } from '@angular/common';
 import esLocale from '@fullcalendar/core/locales/es';
-import { INITIAL_EVENTS, createEventId } from './event-utils';
-
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule],
+  imports: [FullCalendarModule, CommonModule, ReactiveFormsModule],
   templateUrl: './full-calendar.component.html',
-  styleUrl: './full-calendar.component.scss',
+  styleUrls: ['./full-calendar.component.scss'],
 })
-export class FullCalendarComponent {
-  calendarVisible = signal(true);
-  calendarOptions = signal<CalendarOptions>({
+export class CalendarComponent implements AfterViewInit {
+  @ViewChild('fullcalendar') fullcalendar!: FullCalendarComponent;
+  @ViewChild('eventModal') eventModal!: TemplateRef<any>;
+  @ViewChild('confirmDeleteModal') confirmDeleteModal!: TemplateRef<any>;
+
+  calendarVisible = true;
+  calendarOptions: CalendarOptions = {
     plugins: [
       interactionPlugin,
       dayGridPlugin,
@@ -29,10 +36,8 @@ export class FullCalendarComponent {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
-
     initialView: 'dayGridMonth',
     locale: esLocale,
-    initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
     weekends: true,
     editable: true,
     selectable: true,
@@ -40,60 +45,140 @@ export class FullCalendarComponent {
     dayMaxEvents: true,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
-    eventAdd: this.handleEventAdd.bind(this),
-    eventChange: this.handleEventChange.bind(this),
-    eventRemove: this.handleEventRemove.bind(this),
-  });
-  currentEvents = signal<EventApi[]>([]);
+    eventsSet: this.handleEvents.bind(this)
+  };
+  currentEvents: EventApi[] = [];
+  eventForm: FormGroup;
+  private deleteEventId: string | null = null;
+  private confirmDeleteModalRef!: NgbModalRef;
 
-  constructor(private changeDetector: ChangeDetectorRef) {
+  constructor(private eventService: EventService, private modalService: NgbModal, private fb: FormBuilder) {
+    this.eventForm = this.fb.group({
+      id: [''],
+      title: ['', Validators.required],
+      color: ['#000000'],
+      start: ['', Validators.required],
+      end: ['', Validators.required]
+    });
   }
 
-  handleWeekendsToggle() {
-    this.calendarOptions.update((options) => ({
-      ...options,
-      weekends: !options.weekends,
-    }));
+  ngAfterViewInit() {
+    this.loadEvents();
+  }
+
+  loadEvents() {
+    this.eventService.getEvents().subscribe({
+      next: (events: EventInput[]) => {
+        const calendarApi = this.fullcalendar.getApi();
+        events.forEach((event) => {
+          calendarApi.addEvent(event);
+        });
+      },
+      error: (error) => {
+        console.error('Error loading events:', error);
+      }
+    });
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Por favor, introduzca un título para su evento');
-    const calendarApi = selectInfo.view.calendar;
+    this.open(this.eventModal);
+    this.eventForm.reset();
+    this.eventForm.patchValue({
+      start: this.formatDateForInput(selectInfo.startStr),
+      end: this.formatDateForInput(selectInfo.endStr)
+    });
+  }
 
-    calendarApi.unselect(); // clear date selection
+  handleEventClick(clickInfo: { event: EventApi }) {
+    this.open(this.eventModal);
+    this.eventForm.patchValue({
+      id: clickInfo.event.id,
+      title: clickInfo.event.title,
+      color: clickInfo.event.backgroundColor || '#000000',
+      start: this.formatDateForInput(clickInfo.event.startStr),
+      end: this.formatDateForInput(clickInfo.event.endStr)
+    });
+  }
 
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
+  handleEvents(events: EventApi[]) {
+    this.currentEvents = events;
+  }
+
+  open(content: TemplateRef<any>) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  saveEvent() {
+    if (this.eventForm.invalid) {
+      this.eventForm.markAllAsTouched();
+      return;
+    }
+
+    const newEvent: EventInput = this.eventForm.value;
+    newEvent.color = newEvent.color || '#000000';
+
+    if (newEvent.id) {
+      this.eventService.updateEvent(newEvent.id!, newEvent).subscribe({
+        next: () => {
+          const calendarApi = this.fullcalendar.getApi();
+          const event = calendarApi.getEventById(newEvent.id!);
+          if (event) {
+            event.setProp('title', newEvent.title);
+            event.setStart(newEvent.start!);
+            event.setEnd(newEvent.end!);
+            event.setProp('backgroundColor', newEvent.color);
+          }
+          this.modalService.dismissAll();
+        },
+        error: (error) => {
+          console.error('Error updating event:', error);
+        }
+      });
+    } else {
+      newEvent.id = createEventId();
+      this.eventService.addEvent(newEvent).subscribe({
+        next: (event) => {
+          const calendarApi = this.fullcalendar.getApi();
+          calendarApi.addEvent(event);
+          this.modalService.dismissAll();
+        },
+        error: (error) => {
+          console.error('Error adding event:', error);
+        }
       });
     }
   }
 
-  handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`¿Está seguro que desea eliminar el evento '${clickInfo.event.title}'?`)) {
-      clickInfo.event.remove();
+  confirmDelete(eventId: string) {
+    this.deleteEventId = eventId;
+    this.confirmDeleteModalRef = this.modalService.open(this.confirmDeleteModal, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  deleteEvent() {
+    if (this.deleteEventId) {
+      this.eventService.deleteEvent(this.deleteEventId).subscribe({
+        next: () => {
+          const calendarApi = this.fullcalendar.getApi();
+          const event = calendarApi.getEventById(this.deleteEventId!);
+          if (event) {
+            event.remove();
+          }
+          this.deleteEventId = null;
+          this.confirmDeleteModalRef.close();
+        },
+        error: (error) => {
+          console.error('Error deleting event:', error);
+        }
+      });
     }
   }
 
-  handleEvents(events: EventApi[]) {
-    this.currentEvents.set(events);
-    this.changeDetector.detectChanges(); // workaround for pressionChangedAfterItHasBeenCheckedError
+  deleteEventFromList(eventId: string) {
+    this.confirmDelete(eventId);
   }
 
-  handleEventAdd(addInfo: any) {
-    console.log('Event added:', addInfo);
-  }
-
-  handleEventChange(changeInfo: any) {
-    console.log('Event changed:', changeInfo);
-  }
-
-  handleEventRemove(removeInfo: any) {
-    console.log('Event removed:', removeInfo);
+  private formatDateForInput(date: Date | string): string {
+    const d = new Date(date);
+    return formatDate(d, 'yyyy-MM-ddTHH:mm', 'en-US');
   }
 }

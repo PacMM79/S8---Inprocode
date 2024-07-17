@@ -176,3 +176,71 @@ app.delete('/api/markers/:id', (req, res) => {
   });
 });
 
+// CALENDAR //
+
+// Ruta para obtener todos los eventos
+app.get('/api/events', (_req, res) => {
+  const query = 'SELECT * FROM events';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send(results);
+  });
+});
+
+// Ruta para obtener un evento por ID
+app.get('/api/events/:id', (req, res) => {
+  const query = 'SELECT * FROM events WHERE id = ?';
+  connection.query(query, [req.params.id], (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send(results[0]);
+  });
+});
+
+// Ruta para añadir un nuevo evento
+app.post('/api/events', (req, res) => {
+  const newEvent = req.body;
+  const query = 'INSERT INTO events (title, color, start, end) VALUES (?, ?, ?, ?)';
+  const values = [newEvent.title, newEvent.color, newEvent.start, newEvent.end];
+  
+  connection.query(query, values, (error, results) => {
+    if (error) {
+      console.error('Error en la inserción de datos:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.status(201).send({ id: results.insertId, ...newEvent });
+  });
+});
+
+// Ruta para modificar un evento existente
+app.put('/api/events/:id', (req, res) => {
+  const updatedEvent = req.body;
+  const query = 'UPDATE events SET title = ?, color = ?, start = ?, end = ? WHERE id = ?';
+  const values = [updatedEvent.title, updatedEvent.color, updatedEvent.start, updatedEvent.end, req.params.id];
+  
+  connection.query(query, values, (error, results) => {
+    if (error) {
+      console.error('Error en la actualización de datos:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send(updatedEvent);
+  });
+});
+
+// Ruta para eliminar un evento
+app.delete('/api/events/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM events WHERE id = ?';
+  connection.query(query, [id], (error, results) => {
+    if (error) {
+      console.error('Error en la consulta SQL:', error);
+      return res.status(500).send('Error en la base de datos');
+    }
+    res.send({ message: 'Event deleted successfully' });
+  });
+});

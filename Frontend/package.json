@@ -24,6 +24,7 @@
     "@fullcalendar/daygrid": "^6.1.14",
     "@fullcalendar/interaction": "^6.1.14",
     "@fullcalendar/timegrid": "^6.1.14",
+    "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "bootswatch": "^5.3.3",
     "chart.js": "^4.4.3",
     "mysql": "^2.18.1",
