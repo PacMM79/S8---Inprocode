@@ -1,0 +1,42 @@
+.calendar-container {
+    padding: 20px;
+  }
+  
+  .calendar-controls {
+    margin-bottom: 15px;
+  
+    button {
+      margin-right: 10px;
+    }
+  }
+  
+  .calendar-content {
+    .fc-header-toolbar {
+      margin-bottom: 20px;
+    }
+  
+    .fc-daygrid-day-number {
+      font-size: 1rem;
+    }
+  
+    .fc-event {
+      font-size: 0.875rem;
+      padding: 2px 4px;
+    }
+  
+    @media (max-width: 576px) {
+      .fc-header-toolbar {
+        flex-direction: column;
+      }
+  
+      .fc-toolbar-chunk {
+        margin-bottom: 10px;
+      }
+  
+      .fc-daygrid-day-number,
+      .fc-event {
+        font-size: 0.75rem;
+      }
+    }
+  }
+  

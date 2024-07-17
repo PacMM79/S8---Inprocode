@@ -24,6 +24,7 @@
     "@fullcalendar/daygrid": "^6.1.14",
     "@fullcalendar/interaction": "^6.1.14",
     "@fullcalendar/list": "^6.1.14",
+    "@fullcalendar/multimonth": "^6.1.14",
     "@fullcalendar/timegrid": "^6.1.14",
     "bootswatch": "^5.3.3",
     "chart.js": "^4.4.3",

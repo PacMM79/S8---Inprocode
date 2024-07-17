@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
-  zoom = 11;
+  zoom = 12;
   center: google.maps.LatLngLiteral = {
     lat: 41.390390,
     lng: 2.154154,

@@ -1,6 +1,12 @@
-<div class="m-5 p-5">map works!
+<div class="m-3 p-3">
+  <h1>Mapa</h1>
 
-  <google-map [height]="'650px'" [width]="'100%'" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="addMarker($event)">
+  <div class="alert alert-dismissible alert-info">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>Instrucciones:</strong> Haz click sobre cualquier punto del mapa para guardar una ubicación, vuelve a hacer click encima de ella para eliminarla.
+  </div>
+
+  <google-map [height]="'600px'" [width]="'100%'" [zoom]="zoom" [center]="center" [options]="options" (mapClick)="addMarker($event)">
     <map-marker *ngFor="let marker of markers; let i = index"
                 [position]="{lat: marker.lat, lng: marker.lng}"
                 [title]="marker.title"
